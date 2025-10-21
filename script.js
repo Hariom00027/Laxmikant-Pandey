@@ -153,41 +153,14 @@ document.querySelectorAll('.timeline-item').forEach((item, index) => {
     timelineObserver.observe(item);
 });
 
-// Stats counter animation
-function animateCounter(element, target, duration = 2000) {
-    let start = 0;
-    const increment = target / (duration / 16);
-    
-    function updateCounter() {
-        start += increment;
-        if (start < target) {
-            element.textContent = Math.floor(start);
-            requestAnimationFrame(updateCounter);
-        } else {
-            element.textContent = target;
-        }
-    }
-    
-    updateCounter();
-}
-
-// Animate hero stats when they come into view
-const statsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-        if (entry.isIntersecting) {
-            const statNumbers = entry.target.querySelectorAll('.stat-number');
-            statNumbers.forEach(stat => {
-                const target = parseInt(stat.textContent);
-                animateCounter(stat, target);
-            });
-            statsObserver.unobserve(entry.target);
-        }
-    });
-}, { threshold: 0.5 });
-
+// Hero stats (no animation)
 const heroStats = document.querySelector('.hero-stats');
 if (heroStats) {
-    statsObserver.observe(heroStats);
+    const statNumbers = heroStats.querySelectorAll('.stat-number');
+    statNumbers.forEach(stat => {
+        const value = stat.textContent;
+        stat.textContent = value;
+    });
 }
 
 // Flower Rain Animation
