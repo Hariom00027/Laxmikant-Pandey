@@ -117,6 +117,121 @@ document.querySelectorAll('.achievement-card').forEach(card => {
     });
 });
 
+// Image Popup Functionality
+function openImagePopup(imageSrc, title) {
+    // Create popup overlay
+    const popupOverlay = document.createElement('div');
+    popupOverlay.className = 'image-popup-overlay';
+    popupOverlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        cursor: pointer;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    `;
+
+    // Create popup content
+    const popupContent = document.createElement('div');
+    popupContent.style.cssText = `
+        position: relative;
+        max-width: 90%;
+        max-height: 90%;
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        transform: scale(0.8);
+        transition: transform 0.3s ease;
+    `;
+
+    // Create close button
+    const closeButton = document.createElement('button');
+    closeButton.innerHTML = '×';
+    closeButton.style.cssText = `
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        background: none;
+        border: none;
+        font-size: 2rem;
+        color: #666;
+        cursor: pointer;
+        z-index: 10001;
+        transition: color 0.3s ease;
+    `;
+    closeButton.onmouseover = () => closeButton.style.color = '#d4af37';
+    closeButton.onmouseout = () => closeButton.style.color = '#666';
+
+    // Create image
+    const popupImage = document.createElement('img');
+    popupImage.src = imageSrc;
+    popupImage.alt = title;
+    popupImage.style.cssText = `
+        max-width: 100%;
+        max-height: 80vh;
+        border-radius: 10px;
+        display: block;
+        margin: 0 auto;
+    `;
+
+    // Create title
+    const popupTitle = document.createElement('h3');
+    popupTitle.textContent = title;
+    popupTitle.style.cssText = `
+        text-align: center;
+        margin: 15px 0 0 0;
+        font-family: 'Playfair Display', serif;
+        color: #1a1a2e;
+        font-size: 1.5rem;
+    `;
+
+    // Assemble popup
+    popupContent.appendChild(closeButton);
+    popupContent.appendChild(popupImage);
+    popupContent.appendChild(popupTitle);
+    popupOverlay.appendChild(popupContent);
+    document.body.appendChild(popupOverlay);
+
+    // Animate in
+    setTimeout(() => {
+        popupOverlay.style.opacity = '1';
+        popupContent.style.transform = 'scale(1)';
+    }, 10);
+
+    // Close functionality
+    const closePopup = () => {
+        popupOverlay.style.opacity = '0';
+        popupContent.style.transform = 'scale(0.8)';
+        setTimeout(() => {
+            document.body.removeChild(popupOverlay);
+        }, 300);
+    };
+
+    closeButton.onclick = closePopup;
+    popupOverlay.onclick = (e) => {
+        if (e.target === popupOverlay) {
+            closePopup();
+        }
+    };
+
+    // Close on escape key
+    const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+            closePopup();
+            document.removeEventListener('keydown', handleEscape);
+        }
+    };
+    document.addEventListener('keydown', handleEscape);
+}
+
 // Gallery item click effect
 document.querySelectorAll('.gallery-item a').forEach(item => {
     item.addEventListener('click', function(e) {
